@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Posts</title>
+    <link rel="stylesheet" type="text/css" href = '{% static "style.css" %}'>
+</head>
+<body>
+    {% block content %}
+        <h1 class="h1">Список поздравлений</h1>
+
+        <!-- Форма для ввода количества постов на странице -->
+        <form action="." method="get">
+            <label style="font-size: 20px;">Выберите количество постов на странице: </label>
+            <select name="posts_per_page" style="padding: 3px;">
+                <option>3</option>
+                <option>5</option>
+                <option>10</option>
+                <option>15</option>
+            </select>
+            <button type="submit" style="padding: 3px;">Применить</button>
+        </form>
+        <p style="font-size: 20px;">Выбрано для отображения: {{ posts_per_page }} постов на одной странице</p>
+
+        <ul>
+            {% for post in page_posts %}
+                <li>
+                    <h2 class="h2">{{ post.title }}</h2>
+                    <p>{{ post.created_at }}</p>
+                    <p>{{ post.content }}</p>
+                    <br>
+                </li>
+            {% empty %}
+                <p>Нет постов.</p>
+            {% endfor %}
+        </ul>
+
+        <div class="pagination">
+            <p>
+                Вы находитесь на странице:
+                {% if page_posts.has_previous %}
+                    <a href="?page={{ page_posts.previous_page_number }}&posts_per_page={{ posts_per_page }}" class="href-pag">
+<!--                    <a href="?page={{ page_posts.previous_page_number }}" class="href-pag">-->
+                        &laquo;&laquo;Предыдущая
+                    </a>
+                {% endif %}
+                Стр. {{ page_posts.number }} из {{ page_posts.paginator.num_pages }}
+                {% if page_posts.has_next %}
+                    <a href="?page={{ page_posts.next_page_number }}&posts_per_page={{ posts_per_page }}" class="href-pag">
+<!--                    <a href="?page={{ page_posts.next_page_number }}" class="href-pag">-->
+                        Следующая&raquo;&raquo;
+                    </a>
+                {% endif %}
+            </p>
+        </div>
+    {% endblock %}
+</body>
+</html>
